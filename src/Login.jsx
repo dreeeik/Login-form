@@ -1,22 +1,23 @@
-import React from 'react';
-import TextField from '@mui/material/TextField';
-import { Box, Button, FormControl, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React from "react";
+import TextField from "@mui/material/TextField";
+import { Box, Button, FormControl, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const handleFetchData = async () => {
     try {
       const response = await fetch(
-        'https://node-notification.azurewebsites.net/docs',
+        "https://node-notification.azurewebsites.net/docs",
         {
-          path: '/security/login',
-          method: 'POST',
+          path: "/security/login",
+          method: "POST",
           body: JSON.stringify({
-            username: 'string',
-            password: 'string',
+            username: "string",
+            password: "string",
           }),
-        },
+        }
       );
+      console.log(response);
     } catch (e) {
       console.log(e);
     }
@@ -24,28 +25,29 @@ const Login = () => {
 
   return (
     <Box
-      display={'flex'}
-      sx={{ justifyContent: 'center' }}
-      bgcolor={'#ccc'}
-      height={'100vh'}
+      display={"flex"}
+      sx={{ justifyContent: "center" }}
+      bgcolor={"#ccc"}
+      height={"100vh"}
     >
       <FormControl
         sx={{
-          justifyContent: 'center',
-          width: '300px',
-          height: '370px',
-          border: '1px solid #ccc',
-          margin: 'auto',
-          background: '#fff',
+          justifyContent: "center",
+          width: "300px",
+          height: "370px",
+          border: "1px solid #ccc",
+          margin: "auto",
+          background: "#fff",
         }}
+        gap={100}
       >
         <Typography
           sx={{
-            fontSize: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pb: '10px',
+            fontSize: "30px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pb: "10px",
           }}
         >
           Login
@@ -54,7 +56,7 @@ const Login = () => {
           variant="filled"
           placeholder="Email"
           sx={{
-            display: 'flex',
+            display: "flex",
             px: 3,
           }}
         ></TextField>
@@ -62,20 +64,20 @@ const Login = () => {
           variant="filled"
           placeholder="Password"
           sx={{
-            display: 'flex',
+            display: "flex",
             px: 3,
           }}
         ></TextField>
         <FormControl
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            mt: '50px',
-            justifyContent: 'space-evenly',
+            display: "flex",
+            flexDirection: "row",
+            mt: "50px",
+            justifyContent: "space-evenly",
           }}
         >
           <Button>Login</Button>
-          <Link to={'/cadastro'}>
+          <Link to={"/cadastro"}>
             <Button>Cadastro</Button>
           </Link>
         </FormControl>
