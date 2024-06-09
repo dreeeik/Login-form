@@ -43,7 +43,7 @@ const Cadastro = () => {
     >
       <Grid
         container
-        gap={1}
+        gap={1.1}
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"center"}
