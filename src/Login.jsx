@@ -1,16 +1,19 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
-import { Box, Button, FormControl, Typography } from "@mui/material";
+import { Button, FormControl, Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Login = () => {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const handleFetchData = async () => {
     try {
       const response = await fetch(
-        "https://node-notification.azurewebsites.net/docs",
+        "https://node-notification.azurewebsites.net/security/register",
         {
-          path: "/security/login",
           method: "POST",
+          mode: "cors",
           body: JSON.stringify({
             username: "string",
             password: "string",
@@ -24,37 +27,27 @@ const Login = () => {
   };
 
   return (
-    <Box
-      display={"flex"}
-      sx={{ justifyContent: "center" }}
-      bgcolor={"#ccc"}
-      height={"100vh"}
-    >
-      <FormControl
-        sx={{
-          justifyContent: "center",
-          width: "300px",
-          height: "370px",
-          border: "1px solid #ccc",
-          margin: "auto",
-          background: "#fff",
-        }}
-        gap={100}
+    <Grid container display={"flex"} justifyContent={"center"} height={"100vh"}>
+      <Grid
+        container
+        gap={1.1}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        width={400}
+        p={2}
+        borderRadius={"30px"}
+        m={"auto"}
+        bgcolor={"#fff"}
       >
-        <Typography
-          sx={{
-            fontSize: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            pb: "10px",
-          }}
-        >
+        <Typography variant="h4" mb={2} textAlign="center">
           Login
         </Typography>
         <TextField
           variant="filled"
-          placeholder="Email"
+          placeholder="Username"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
           sx={{
             display: "flex",
             px: 3,
@@ -63,26 +56,43 @@ const Login = () => {
         <TextField
           variant="filled"
           placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           sx={{
             display: "flex",
             px: 3,
           }}
         ></TextField>
         <FormControl
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            mt: "50px",
-            justifyContent: "space-evenly",
-          }}
+          sx={{ paddingTop: 2 }}
+          display={"flex"}
+          justifyContent={"center"}
         >
-          <Button>Login</Button>
-          <Link to={"/cadastro"}>
-            <Button>Cadastro</Button>
-          </Link>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 3, marginLeft: 3, textTransform: "capitalize" }}
+            onChange={handleFetchData}
+          >
+            Login
+          </Button>
+
+          <Typography
+            variant="body1"
+            mt={1}
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"center"}
+          >
+            Não possui uma conta?
+            <Link to={"/cadastro"} style={{ textDecoration: "none" }}>
+              <Typography fontWeight={"bold"} color={"#000"} marginLeft={0.7}>
+                Cadastre-se
+              </Typography>
+            </Link>
+          </Typography>
         </FormControl>
-      </FormControl>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 

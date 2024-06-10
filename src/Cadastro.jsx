@@ -1,29 +1,34 @@
 import {
-  Box,
   Button,
   FormControl,
   Grid,
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { Form, Link } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import style from "./Cadastro.module.css";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Cadastro = () => {
+  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+
   const handleFetchData = async () => {
     try {
       const response = await fetch(
-        "https://node-notification.azurewebsites.net/docs",
+        "https://node-notification.azurewebsites.net/security/register",
         {
-          path: "/security/register",
           method: "POST",
+          mode: "cors",
           body: JSON.stringify({
             name: "string",
             username: "string",
-            password: "string",
             email: "string",
+            password: "string",
             phone: "string",
             address: { city: "string", state: "string" },
           }),
@@ -35,91 +40,111 @@ const Cadastro = () => {
     }
   };
   return (
-    <Grid
-      container
-      display={"flex"}
-      sx={{ justifyContent: "center" }}
-      bgcolor={"#ccc"}
-    >
+    <Grid container display={"flex"} justifyContent={"center"} height={"100vh"}>
       <Grid
         container
         gap={1.1}
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"center"}
-        width={380}
+        width={400}
         p={2}
+        borderRadius={"40px"}
+        m={"auto"}
         bgcolor={"#fff"}
       >
-        <Link to={"/"}>
-          <ArrowBackIcon />
-        </Link>
-        <Typography
-          sx={{
-            fontSize: "25px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Cadastro
+        <Typography variant="h4" mb={2} textAlign="center">
+          Cadastre-se
         </Typography>
+        <Grid display={"flex"}>
+          <TextField
+            size="small"
+            variant="filled"
+            placeholder="Nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            size="small"
+            variant="filled"
+            placeholder="Username"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            sx={{ paddingLeft: 0.5 }}
+          />
+        </Grid>
+        <Grid display={"flex"}>
+          <TextField
+            size="small"
+            variant="filled"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+
+          <TextField
+            size="small"
+            variant="filled"
+            type="password"
+            placeholder="Password"
+            value={password}
+            sx={{ paddingLeft: 0.5 }}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Grid>
 
         <TextField
-          className={style.input}
-          variant="filled"
-          placeholder="Nome"
-        />
-        <TextField
-          className={style.input}
-          variant="filled"
-          placeholder="Username"
-        />
-        <TextField
+          size="small"
           variant="filled"
           placeholder="Email"
           type="email"
-          className={style.input}
-        />
-        <TextField
-          variant="filled"
-          type="password"
-          placeholder="Password"
-          className={style.input}
-        />
-        <TextField
-          variant="filled"
-          placeholder="Phone"
-          className={style.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
-        <Typography py={1}> Endereço </Typography>
+        <Typography py={0.4}> Endereço </Typography>
 
         <FormControl sx={{ display: "flex", flexDirection: "row" }}>
           <TextField
+            size="small"
             variant="filled"
             placeholder="Cidade"
             sx={{ paddingRight: 2 }}
-            className={style.input}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
           />
           <TextField
+            size="small"
             variant="filled"
             placeholder="Estado"
-            className={style.input}
+            value={state}
+            onChange={(e) => setState(e.target.value)}
           />
         </FormControl>
 
-        <FormControl
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            pt: 2,
-            justifyContent: "space-evenly",
-          }}
-        >
-          <Link to={"/"}>
-            <Button onClick={handleFetchData}>Salvar</Button>
-          </Link>
+        <FormControl sx={{ paddingTop: 1 }}>
+          <Button
+            variant="contained"
+            sx={{ textTransform: "capitalize" }}
+            onClick={handleFetchData}
+          >
+            Cadastrar
+          </Button>
+
+          <Typography
+            variant="body1"
+            pt={1}
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"center"}
+          >
+            Possui uma conta?
+            <Link to={"/"} style={{ textDecoration: "none" }}>
+              <Typography fontWeight={"bold"} color={"#000"} marginLeft={1}>
+                Entre
+              </Typography>
+            </Link>
+          </Typography>
         </FormControl>
       </Grid>
     </Grid>
