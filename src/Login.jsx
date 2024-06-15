@@ -1,26 +1,37 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
-import { Button, FormControl, Typography, Grid } from "@mui/material";
+import { Button, Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const handleFetchData = async () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleFetchData = async (data) => {
+    const BASE_URL = "https://node-notification.azurewebsites.net";
     try {
-      const response = await fetch(
-        "https://node-notification.azurewebsites.net/security/register",
-        {
-          method: "POST",
-          mode: "cors",
-          body: JSON.stringify({
-            username: "string",
-            password: "string",
-          }),
-        }
-      );
-      console.log(response);
+      const response = await fetch(`${BASE_URL}/security/login`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({
+          username: data.username,
+          password: data.password,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result);
     } catch (e) {
       console.log(e);
     }
@@ -43,54 +54,68 @@ const Login = () => {
         <Typography variant="h4" mb={2} textAlign="center">
           Login
         </Typography>
-        <TextField
-          variant="filled"
-          placeholder="Username"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          sx={{
-            display: "flex",
-            px: 3,
-          }}
-        ></TextField>
-        <TextField
-          variant="filled"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          sx={{
-            display: "flex",
-            px: 3,
-          }}
-        ></TextField>
-        <FormControl
-          sx={{ paddingTop: 2 }}
-          display={"flex"}
-          justifyContent={"center"}
-        >
-          <Button
-            variant="contained"
-            sx={{ marginRight: 3, marginLeft: 3, textTransform: "capitalize" }}
-            onChange={handleFetchData}
-          >
-            Login
-          </Button>
+        <form onSubmit={handleSubmit(handleFetchData)}>
+          <TextField
+            variant="filled"
+            className={errors.username && "input-error"}
+            placeholder="Username"
+            type="string"
+            {...register("username", { minLength: 2 })}
+            sx={{
+              display: "flex",
+              px: 3,
+              pb: 1,
+            }}
+          />
+          {errors.username && (
+            <Typography variant="body2" fontSize={14} ml={3} color={"red"}>
+              Digite um username válido
+            </Typography>
+          )}
+          <TextField
+            variant="filled"
+            placeholder="Password"
+            type="password"
+            className={errors.password && "input-error"}
+            {...register("password", { minLength: 3 })}
+            sx={{
+              display: "flex",
+              px: 3,
+            }}
+          />
+          {errors.password && (
+            <Typography variant="body2" fontSize={14} ml={3} color={"red"}>
+              Digite uma senha válida
+            </Typography>
+          )}
+          <Grid pt={1} px={3}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                textTransform: "capitalize",
+              }}
+              type="submit"
+            >
+              Login
+            </Button>
 
-          <Typography
-            variant="body1"
-            mt={1}
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"center"}
-          >
-            Não possui uma conta?
-            <Link to={"/cadastro"} style={{ textDecoration: "none" }}>
-              <Typography fontWeight={"bold"} color={"#000"} marginLeft={0.7}>
-                Cadastre-se
-              </Typography>
-            </Link>
-          </Typography>
-        </FormControl>
+            <Typography
+              variant="body1"
+              mt={1}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"center"}
+            >
+              Não possui uma conta?
+              <Link to={"/cadastro"} style={{ textDecoration: "none" }}>
+                <Typography fontWeight={"bold"} color={"#000"} marginLeft={0.7}>
+                  Cadastre-se
+                </Typography>
+              </Link>
+            </Typography>
+          </Grid>
+        </form>
       </Grid>
     </Grid>
   );

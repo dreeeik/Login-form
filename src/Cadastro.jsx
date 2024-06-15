@@ -5,40 +5,44 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const Cadastro = () => {
-  const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
+  const { register, handleSubmit } = useForm();
 
-  const handleFetchData = async () => {
+  const handleFetchData = async (data) => {
+    const BASE_URL = "https://node-notification.azurewebsites.net";
     try {
-      const response = await fetch(
-        "https://node-notification.azurewebsites.net/security/register",
-        {
-          method: "POST",
-          mode: "cors",
-          body: JSON.stringify({
-            name: "string",
-            username: "string",
-            email: "string",
-            password: "string",
-            phone: "string",
-            address: { city: "string", state: "string" },
-          }),
-        }
-      );
-      console.log(response);
+      const response = await fetch(`${BASE_URL}/security/register`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          phone: data.phone,
+          address: { city: data.city, state: data.state },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result);
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <Grid container display={"flex"} justifyContent={"center"} height={"100vh"}>
       <Grid
@@ -56,96 +60,92 @@ const Cadastro = () => {
         <Typography variant="h4" mb={2} textAlign="center">
           Cadastre-se
         </Typography>
-        <Grid display={"flex"}>
+        <form onSubmit={handleSubmit(handleFetchData)}>
+          <Grid display={"flex"} pb={1}>
+            <TextField
+              size="small"
+              variant="filled"
+              placeholder="Nome"
+              type="string"
+              {...register("name")}
+            />
+            <TextField
+              size="small"
+              variant="filled"
+              placeholder="Username"
+              type="string"
+              sx={{ paddingLeft: 0.5 }}
+              {...register("username")}
+            />
+          </Grid>
+          <Grid display={"flex"} pb={1}>
+            <TextField
+              size="small"
+              variant="filled"
+              placeholder="Phone"
+              type="number"
+              {...register("phone")}
+            />
+            <TextField
+              size="small"
+              variant="filled"
+              type="password"
+              placeholder="Password"
+              sx={{ paddingLeft: 0.5 }}
+              {...register("password")}
+            />
+          </Grid>
           <TextField
             size="small"
             variant="filled"
-            placeholder="Nome"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Email"
+            fullWidth
+            type="email"
+            {...register("email")}
           />
-          <TextField
-            size="small"
-            variant="filled"
-            placeholder="Username"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            sx={{ paddingLeft: 0.5 }}
-          />
-        </Grid>
-        <Grid display={"flex"}>
-          <TextField
-            size="small"
-            variant="filled"
-            placeholder="Phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-
-          <TextField
-            size="small"
-            variant="filled"
-            type="password"
-            placeholder="Password"
-            value={password}
-            sx={{ paddingLeft: 0.5 }}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Grid>
-
-        <TextField
-          size="small"
-          variant="filled"
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <Typography py={0.4}> Endereço </Typography>
-
-        <FormControl sx={{ display: "flex", flexDirection: "row" }}>
-          <TextField
-            size="small"
-            variant="filled"
-            placeholder="Cidade"
-            sx={{ paddingRight: 2 }}
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <TextField
-            size="small"
-            variant="filled"
-            placeholder="Estado"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          />
-        </FormControl>
-
-        <FormControl sx={{ paddingTop: 1 }}>
-          <Button
-            variant="contained"
-            sx={{ textTransform: "capitalize" }}
-            onClick={handleFetchData}
-          >
-            Cadastrar
-          </Button>
-
-          <Typography
-            variant="body1"
-            pt={1}
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"center"}
-          >
-            Possui uma conta?
-            <Link to={"/"} style={{ textDecoration: "none" }}>
-              <Typography fontWeight={"bold"} color={"#000"} marginLeft={1}>
-                Entre
-              </Typography>
-            </Link>
-          </Typography>
-        </FormControl>
+          <Typography py={0.4}> Endereço </Typography>
+          <FormControl sx={{ display: "flex", flexDirection: "row" }}>
+            <TextField
+              size="small"
+              variant="filled"
+              placeholder="Cidade"
+              sx={{ paddingRight: 1 }}
+              {...register("city")}
+            />
+            <TextField
+              size="small"
+              variant="filled"
+              placeholder="Estado"
+              {...register("state")}
+            />
+          </FormControl>
+          <Grid pt={1}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                textTransform: "capitalize",
+              }}
+              type="submit"
+            >
+              Cadastrar
+            </Button>
+            <Typography
+              variant="body1"
+              pt={1}
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"center"}
+            >
+              Possui uma conta?
+              <Link to={"/"} style={{ textDecoration: "none" }}>
+                <Typography fontWeight={"bold"} color={"#000"} marginLeft={1}>
+                  Entre
+                </Typography>
+              </Link>
+            </Typography>
+          </Grid>
+        </form>
       </Grid>
     </Grid>
   );
